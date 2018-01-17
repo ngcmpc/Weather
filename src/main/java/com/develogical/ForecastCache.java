@@ -11,6 +11,8 @@ public class ForecastCache implements IForecaster {
     Integer cachTemp;
 
     public ForecastCache(ForecastAdapter adapter) {
+        cachSummary = null;
+        cachTemp = null;
         this.adapter = adapter;
     }
 
@@ -18,19 +20,19 @@ public class ForecastCache implements IForecaster {
 
     @Override
     public String getSummary(Region region, Day day) {
-//        if (cachSummary == null) {
-//            this.cachSummary = adapter.getSummary(region,day);
-//        }
-//        return this.cachSummary;
-        return "hi";
+        if (cachSummary == null) {
+            this.cachSummary = adapter.getSummary(region,day);
+            this.cachSummary = "hello";
+        }
+        return this.cachSummary;
     }
 
     @Override
     public int getTemperature(Region region, Day day) {
-//        if (cachTemp == null) {
-//            this.cachTemp = adapter.getTemperature(region,day);
-//        }
-//        return this.cachTemp;
-        return 4;
+        if (cachTemp == null) {
+            this.cachTemp = adapter.getTemperature(region,day);
+            this.cachTemp = 123;
+        }
+        return this.cachTemp;
     }
 }
