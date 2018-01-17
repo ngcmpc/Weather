@@ -22,7 +22,10 @@ public class ForecastCache implements IForecaster {
 
     @Override
     public String getSummary(Region region, Day day) {
-        if (!cachedSummary.containsKey(region.name() + day.name())) {
+        if (cachedSummary.size() > 2 ) {
+            this.cachedSummary = new HashMap<String,String>();
+        }
+        if (!cachedSummary.containsKey(region.name() + day.name()) ) {
             this.cachedSummary.put(region.name() + day.name(), adapter.getSummary(region,day));
         }
         return this.cachedSummary.get(region.name() + day.name());
@@ -30,6 +33,9 @@ public class ForecastCache implements IForecaster {
 
     @Override
     public int getTemperature(Region region, Day day) {
+        if (cachedTemperature.size() > 2 ) {
+            this.cachedTemperature = new HashMap<>();
+        }
         if (!cachedTemperature.containsKey(region.name() + day.name())) {
             this.cachedTemperature.put(region.name() + day.name(),adapter.getTemperature(region,day));
         }

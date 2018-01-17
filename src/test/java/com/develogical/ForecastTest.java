@@ -81,4 +81,29 @@ public class ForecastTest {
         assertThat(temperatureEdinburgh,equalTo(3));
         verify(delegate).getTemperature(Region.LONDON, Day.TUESDAY);
     }
+
+    @Test
+    public void testMaximumCacheSize() {
+        IForecaster forecastCache = new ForecastCache(delegate);
+        when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("fine");
+        when(delegate.getSummary(Region.LONDON, Day.TUESDAY)).thenReturn("notfine");
+        when(delegate.getSummary(Region.LONDON, Day.WEDNESDAY)).thenReturn("ok");
+
+        forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        verify(delegate).getSummary(Region.LONDON, Day.MONDAY);
+
+        forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        verify(delegate).getSummary(Region.LONDON, Day.MONDAY);;
+
+        forecastCache.getSummary(Region.LONDON, Day.TUESDAY);
+        verify(delegate).getSummary(Region.LONDON, Day.TUESDAY);
+
+        forecastCache.getSummary(Region.LONDON, Day.WEDNESDAY);
+        verify(delegate).getSummary(Region.LONDON, Day.WEDNESDAY);
+
+        // Cache should be full by now - retrieve again data from adapter
+        when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("abc");
+        String summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        assertThat(summary, is("abc"));
+    }
 }
