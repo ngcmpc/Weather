@@ -1,5 +1,6 @@
 package com.develogical;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.weather.Day;
 import com.weather.Region;
 import org.junit.Test;
@@ -87,12 +88,6 @@ public class ForecastTest {
         IForecaster forecastCache = new ForecastCache(delegate);
         when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("fine");
         String summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
-        //verify(delegate).getSummary(Region.LONDON, Day.MONDAY);
-
-        //forecastCache.getSummary(Region.LONDON, Day.MONDAY);
-        //assertThat(summary, is("fine"));
-        //verify(delegate, times(1)).getSummary(Region.LONDON, Day.MONDAY);
-
         when(delegate.getSummary(Region.LONDON, Day.TUESDAY)).thenReturn("notfine");
         forecastCache.getSummary(Region.LONDON, Day.TUESDAY);
         verify(delegate).getSummary(Region.LONDON, Day.TUESDAY);
@@ -106,6 +101,27 @@ public class ForecastTest {
         when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("abc");
         summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
         assertThat(summary, is("abc"));
+        verify(delegate, times(2)).getSummary(Region.LONDON, Day.MONDAY);
+    }
+
+    boolean timeout = false;
+
+    @Test
+    public void testCacheLastTimer() {
+
+        ForecastCache.Timer timer = new ForecastCache.Timer() {
+            @Override
+            public boolean timeout() {
+                return timeout;
+            }
+        };
+
+        IForecaster forecastCache = new ForecastCache(delegate, timer);
+        String summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        verify(delegate, times(1)).getSummary(Region.LONDON, Day.MONDAY);
+        timeout = true;
+        forecastCache.getSummary(Region.LONDON, Day.MONDAY);
         verify(delegate, times(2)).getSummary(Region.LONDON, Day.MONDAY);
     }
 
