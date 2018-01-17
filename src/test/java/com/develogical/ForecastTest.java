@@ -86,24 +86,25 @@ public class ForecastTest {
     public void testMaximumCacheSize() {
         IForecaster forecastCache = new ForecastCache(delegate);
         when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("fine");
-        when(delegate.getSummary(Region.LONDON, Day.TUESDAY)).thenReturn("notfine");
-        when(delegate.getSummary(Region.LONDON, Day.WEDNESDAY)).thenReturn("ok");
-
-        forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        String summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
         verify(delegate).getSummary(Region.LONDON, Day.MONDAY);
 
-        forecastCache.getSummary(Region.LONDON, Day.MONDAY);
-        verify(delegate).getSummary(Region.LONDON, Day.MONDAY);;
+        forecastCache.getSummary(Region.LONDON, Day.MONDAY); assertThat(summary, is("fine"));
 
+        when(delegate.getSummary(Region.LONDON, Day.TUESDAY)).thenReturn("notfine");
         forecastCache.getSummary(Region.LONDON, Day.TUESDAY);
         verify(delegate).getSummary(Region.LONDON, Day.TUESDAY);
 
+
+        when(delegate.getSummary(Region.LONDON, Day.WEDNESDAY)).thenReturn("ok");
         forecastCache.getSummary(Region.LONDON, Day.WEDNESDAY);
         verify(delegate).getSummary(Region.LONDON, Day.WEDNESDAY);
 
         // Cache should be full by now - retrieve again data from adapter
         when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("abc");
-        String summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
         assertThat(summary, is("abc"));
     }
+
+
 }
