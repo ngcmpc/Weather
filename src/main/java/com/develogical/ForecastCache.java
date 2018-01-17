@@ -9,12 +9,12 @@ public class ForecastCache implements IForecaster {
 
 
     IForecaster adapter;
-    String cachSummary;
-    Integer cachTemp;
+    HashMap<String, String> cachedSummary;
+    HashMap<String, Integer> cachedTemperature;
 
     public ForecastCache(IForecaster adapter) {
-        cachSummary = null;
-        cachTemp = null;
+        this.cachedSummary = new HashMap<String,String>();
+        this.cachedTemperature = new HashMap<String, Integer>();
         this.adapter = adapter;
     }
 
@@ -22,17 +22,17 @@ public class ForecastCache implements IForecaster {
 
     @Override
     public String getSummary(Region region, Day day) {
-        if (cachSummary == null) {
-            this.cachSummary = adapter.getSummary(region,day);
+        if (!cachedSummary.containsKey(region.name())) {
+            this.cachedSummary.put(region.name(), adapter.getSummary(region,day));
         }
-        return this.cachSummary;
+        return this.cachedSummary.get(region.name());
     }
 
     @Override
     public int getTemperature(Region region, Day day) {
-        if (cachTemp == null) {
-            this.cachTemp = adapter.getTemperature(region,day);
+        if (!cachedTemperature.containsKey(region.name())) {
+            this.cachedTemperature.put(region.name(),adapter.getTemperature(region,day));
         }
-        return this.cachTemp;
+        return this.cachedTemperature.get(region.name());
     }
 }
