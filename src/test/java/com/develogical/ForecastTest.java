@@ -87,9 +87,11 @@ public class ForecastTest {
         IForecaster forecastCache = new ForecastCache(delegate);
         when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("fine");
         String summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
-        verify(delegate).getSummary(Region.LONDON, Day.MONDAY);
+        //verify(delegate).getSummary(Region.LONDON, Day.MONDAY);
 
-        forecastCache.getSummary(Region.LONDON, Day.MONDAY); assertThat(summary, is("fine"));
+        //forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        //assertThat(summary, is("fine"));
+        //verify(delegate, times(1)).getSummary(Region.LONDON, Day.MONDAY);
 
         when(delegate.getSummary(Region.LONDON, Day.TUESDAY)).thenReturn("notfine");
         forecastCache.getSummary(Region.LONDON, Day.TUESDAY);
@@ -104,6 +106,7 @@ public class ForecastTest {
         when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("abc");
         summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
         assertThat(summary, is("abc"));
+        verify(delegate, times(2)).getSummary(Region.LONDON, Day.MONDAY);
     }
 
 
