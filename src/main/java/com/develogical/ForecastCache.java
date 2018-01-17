@@ -3,14 +3,16 @@ package com.develogical;
 import com.weather.Day;
 import com.weather.Region;
 
+import java.util.HashMap;
+
 public class ForecastCache implements IForecaster {
 
 
-    ForecastAdapter adapter;
+    IForecaster adapter;
     String cachSummary;
     Integer cachTemp;
 
-    public ForecastCache(ForecastAdapter adapter) {
+    public ForecastCache(IForecaster adapter) {
         cachSummary = null;
         cachTemp = null;
         this.adapter = adapter;
@@ -22,7 +24,6 @@ public class ForecastCache implements IForecaster {
     public String getSummary(Region region, Day day) {
         if (cachSummary == null) {
             this.cachSummary = adapter.getSummary(region,day);
-            this.cachSummary = "hello";
         }
         return this.cachSummary;
     }
@@ -31,7 +32,6 @@ public class ForecastCache implements IForecaster {
     public int getTemperature(Region region, Day day) {
         if (cachTemp == null) {
             this.cachTemp = adapter.getTemperature(region,day);
-            this.cachTemp = 123;
         }
         return this.cachTemp;
     }
