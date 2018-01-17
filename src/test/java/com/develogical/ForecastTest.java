@@ -59,5 +59,26 @@ public class ForecastTest {
         verify(delegate).getTemperature(Region.EDINBURGH, Day.MONDAY);
     }
 
+    @Test
+    public void testCanCacheBasedOnDifferentDate() {
+        IForecaster forecastCache = new ForecastCache(delegate);
+        when(delegate.getSummary(Region.LONDON, Day.MONDAY)).thenReturn("fine");
+        when(delegate.getTemperature(Region.LONDON, Day.MONDAY)).thenReturn(4);
+        when(delegate.getSummary(Region.LONDON, Day.TUESDAY)).thenReturn("notfine");
+        when(delegate.getTemperature(Region.LONDON, Day.TUESDAY)).thenReturn(3);
 
+        String summary = forecastCache.getSummary(Region.LONDON, Day.MONDAY);
+        assertThat(summary,equalTo("fine"));
+        verify(delegate).getSummary(Region.LONDON, Day.MONDAY);
+        int temperature = forecastCache.getTemperature(Region.LONDON, Day.MONDAY);
+        assertThat(temperature,equalTo(4));
+        verify(delegate).getTemperature(Region.LONDON, Day.MONDAY);
+
+        String summaryEdinburgh = forecastCache.getSummary(Region.LONDON, Day.TUESDAY);
+        assertThat(summaryEdinburgh,equalTo("notfine"));
+        verify(delegate).getSummary(Region.LONDON, Day.TUESDAY);
+        int temperatureEdinburgh = forecastCache.getTemperature(Region.LONDON, Day.TUESDAY);
+        assertThat(temperatureEdinburgh,equalTo(3));
+        verify(delegate).getTemperature(Region.LONDON, Day.TUESDAY);
+    }
 }
