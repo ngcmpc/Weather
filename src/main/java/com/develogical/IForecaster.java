@@ -4,9 +4,8 @@ import com.weather.Day;
 import com.weather.Region;
 
 public interface IForecaster {
-    void setUp(Region region, Day day);
 
-    String getSummary();
+    String getSummary(Region region, Day day);
 
-    int getTemperature();
+    int getTemperature(Region region, Day day);
 }

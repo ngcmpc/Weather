@@ -16,17 +16,14 @@ public class ForecastAdapter implements IForecaster {
 
 
     @Override
-    public void setUp(Region region, Day day) {
-        this.forecast = forecaster.forecastFor(region, day);
-    }
-
-    @Override
-    public String getSummary(){
+    public String getSummary(Region region, Day day){
+        this.forecast = this.forecaster.forecastFor(region,day);
         return this.forecast.summary();
     }
 
     @Override
-    public int getTemperature() {
+    public int getTemperature(Region region, Day day) {
+        this.forecast = this.forecaster.forecastFor(region,day);
         return this.forecast.temperature();
     }
 }
